@@ -24,4 +24,54 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+// Create new cohort
+router.post("/", async (req, res, next) => {
+  try {
+    const cohort = await Cohort.create(req.body);
+    res.status(201).json(cohort);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Update cohort
+router.put("/:id", async (req, res, next) => {
+  try {
+    const cohort = await Cohort.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!cohort) {
+      return res.status(404).json({ message: "Cohort not found" });
+    }
+    res.json(cohort);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Delete cohort
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const cohort = await Cohort.findByIdAndDelete(req.params.id);
+    if (!cohort) {
+      return res.status(404).json({ message: "Cohort not found" });
+    }
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get all students in a cohort
+router.get("/:id/students", async (req, res, next) => {
+  try {
+    const Student = require("../models/Student");
+    const students = await Student.find({ cohort: req.params.id });
+    res.json(students);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

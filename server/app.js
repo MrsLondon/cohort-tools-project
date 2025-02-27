@@ -4,11 +4,9 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const PORT = 5005;
 
-// STATIC DATA
-// Devs Team - Import the provided files with JSON data of students and cohorts here:
-// ...
-const cohorts = require("./cohorts.json");
-const students = require("./students.json");
+// Import route handlers
+const cohortRoutes = require("./routes/cohort.routes");
+const studentRoutes = require("./routes/student.routes");
 
 // Initialize express app
 const app = express();
@@ -31,17 +29,21 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Routes
+// Documentation route
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
-app.get("/api/cohorts", (req, res) => {
-  res.json(cohorts);
-});
+// API Routes
+app.use("/api/cohort", cohortRoutes);
+app.use("/api/student", studentRoutes);
 
-app.get("/api/students", (req, res) => {
-  res.json(students);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    message: err.message || "Internal server error",
+  });
 });
 
 // Start server
