@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const PORT = 5005;
 
@@ -9,8 +10,17 @@ const PORT = 5005;
 const cohorts = require("./cohorts.json");
 const students = require("./students.json");
 
-// INITIALIZE EXPRESS APP - https://expressjs.com/en/4x/api.html#express
+// Initialize express app
 const app = express();
+
+// DATABASE CONNECTION
+const MONGODB_URI = "mongodb://localhost:27017/cohort-tools-dev";
+mongoose
+  .connect(MONGODB_URI)
+  .then(async (x) => {
+    console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`);
+  })
+  .catch((err) => console.error("Error connecting to mongo", err));
 
 // MIDDLEWARE
 // Research Team - Set up CORS middleware here:
@@ -21,9 +31,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// ROUTES - https://expressjs.com/en/starter/basic-routing.html
-// Devs Team - Start working on the routes here:
-// ...
+// Routes
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
@@ -36,12 +44,7 @@ app.get("/api/students", (req, res) => {
   res.json(students);
 });
 
-// START SERVER
+// Start server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
-
-//Test
-//Test2
-
-const test = "test";
