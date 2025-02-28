@@ -2,7 +2,8 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const PORT = 5005;
+const PORT = process.env.PORT || 5005;
+require("dotenv").config();
 
 // Import route handlers
 const cohortRoutes = require("./routes/cohort.routes");
@@ -12,7 +13,7 @@ const studentRoutes = require("./routes/student.routes");
 const app = express();
 
 // DATABASE CONNECTION
-const MONGODB_URI = "mongodb://localhost:27017/cohort-tools-dev";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/cohort-tools-dev";
 mongoose
   .connect(MONGODB_URI)
   .then(async (x) => {
