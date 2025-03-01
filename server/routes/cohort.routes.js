@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Cohort = require("../models/Cohort");
+const Student = require("../models/Student");
 
 // Get all cohorts
 router.get("/", async (req, res, next) => {
@@ -54,6 +55,8 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const cohort = await Cohort.findByIdAndDelete(req.params.id);
+    // When deleting a cohort, remove the cohort reference from all associated students
+    await Student.updateMany({ cohort: req.params.id }, { $unset: { cohort: 1 } });
     if (!cohort) {
       return res.status(404).json({ message: "Cohort not found" });
     }
