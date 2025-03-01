@@ -77,4 +77,14 @@ router.get("/:id/cohort", async (req, res, next) => {
   }
 });
 
+// Get all students for a specific cohort
+router.get("/cohort/:cohortId", async (req, res, next) => {
+  try {
+    const students = await Student.find({ cohort: req.params.cohortId }).populate("cohort");
+    res.json(students);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -5,10 +5,6 @@ const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5005;
 require("dotenv").config();
 
-// Import route handlers
-const cohortRoutes = require("./routes/cohort.routes");
-const studentRoutes = require("./routes/student.routes");
-
 // Initialize express app
 const app = express();
 
@@ -35,9 +31,13 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
+// Import route handlers
+const cohortRoutes = require("./routes/cohort.routes");
+const studentRoutes = require("./routes/student.routes");
+
 // API Routes
-app.use("/api/cohort", cohortRoutes);
-app.use("/api/student", studentRoutes);
+app.use("/api/cohorts", cohortRoutes);
+app.use("/api/students", studentRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
