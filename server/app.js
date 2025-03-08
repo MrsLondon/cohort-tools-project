@@ -7,6 +7,7 @@ require("dotenv").config();
 
 // Initialize express app
 const app = express();
+const { isAuthenticated } = require("./middlewares");
 
 // DATABASE CONNECTION
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/cohort-tools-dev";
@@ -34,10 +35,13 @@ app.get("/docs", (req, res) => {
 // Import route handlers
 const cohortRoutes = require("./routes/cohort.routes");
 const studentRoutes = require("./routes/student.routes");
+const authroutes = require("./routes/auth.routes");
 
 // API Routes
 app.use("/api/cohorts", cohortRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/auth", authroutes);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
