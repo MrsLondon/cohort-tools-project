@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5005;
 require("dotenv").config();
+console.log(process.env);
 
 // Initialize express app
 const app = express();

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const router = require("express").Router();
 
+
 const { isAuthenticated } = require("../middlewares");
 
 const saltRounds = 10;
@@ -117,7 +118,25 @@ router.post("/login", (req, res, next) => {
 router.get("/verify", isAuthenticated, (req, res, next) => {
   console.log("req.payload", req.payload);
   res.status(200).json({ message: "User is authenticated" });
-})
-    // Get the token string from the authorization
+});
+
+router.get('/users/:id', isAuthenticated, async (req, res, next) => {
+    try {
+      const userId = req.params.id;
+  
+      if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json({ message: 'Invalid user ID' });
+      }
+  
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      res.status(200).json(user);
+    } catch (err) {
+      next(err);
+    }
+  });
 
 module.exports = router;
