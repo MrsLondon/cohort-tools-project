@@ -38,6 +38,12 @@ const cohortRoutes = require("./routes/cohort.routes");
 const studentRoutes = require("./routes/student.routes");
 const authroutes = require("./routes/auth.routes");
 
+
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
+
 // API Routes
 app.use("/api/cohorts", cohortRoutes);
 app.use("/api/students", studentRoutes);
